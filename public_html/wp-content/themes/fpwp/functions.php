@@ -1,5 +1,5 @@
 <?php
-
+//https://wp.fredericpilon.com/?rest_route=/wp/v2/posts/2
     $box = tr_meta_box('Contents');
     $box->addPostType('page');
     $box->setCallback(function() {
