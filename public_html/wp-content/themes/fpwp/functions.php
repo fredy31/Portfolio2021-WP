@@ -8,7 +8,7 @@
         echo $form->repeater('abilities')->setLabel('Abiletés')->setFields(
             $form->row(
                 $form->text('Nom'),
-                $form->select('Niveau')->setOptions([1,2,3,4]),
+                $form->select('Niveau')->setOptions([1,2,3,4,5]),
                 $form->color('Couleur'),
                 $form->image('Logo')
             )
@@ -34,9 +34,33 @@
     add_action( 'rest_api_init',  'register_custom_fields' );
     function register_custom_fields() {
         register_rest_field('page','trmeta',['get_callback'=>function($object){
-            return get_post_meta($object['id']);
+            $meta = searchReplaceArray(get_post_meta($object['id']));
+            //$meta = get_post_meta($object['id']);
+            return $meta;
         }]);
-        register_rest_field('page','argh',['get_callback'=>function($object){
+        /*register_rest_field('page','argh',['get_callback'=>function($object){
             return $object['id'];
-        }]);
+        }]);*/
     };
+    function searchReplaceArray($array){
+        $arrOut = [];
+        foreach($array as $k=>$a){
+            $data = @unserialize($a);
+            if(is_array($a)){
+                $arrOut[$k] = searchReplaceArray($a);
+            }elseif($data !== false){
+                $arrOut[$k] = json_encode(searchReplaceArray($data));
+            }elseif(!is_nan($a)){
+                $arrOut[$k] = $a;
+                $img = wp_get_attachment_image_url($a,'large');
+                if($img){
+                    $arrOut[$k.'_src'] = $img;
+                }
+            }else{
+                $arrOut[$k] = $a;
+            }
+            //$arrOut[$k] = $a;
+            //$arrOut[$k.'_data'] = $data;
+        }
+        return $arrOut;
+    }
