@@ -8,6 +8,7 @@
         echo $form->repeater('abilities')->setLabel('Abiletés')->setFields(
             $form->row(
                 $form->text('Nom'),
+                $form->textarea('Description'),
                 $form->select('Niveau')->setOptions([1,2,3,4,5]),
                 $form->color('Couleur'),
                 $form->image('Logo')
