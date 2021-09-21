@@ -1,10 +1,16 @@
 <?php
+function add_cors_http_header(){
+    header("Access-Control-Allow-Origin: *");
+}
+add_action('init','add_cors_http_header');
 //https://wp.fredericpilon.com/?rest_route=/wp/v2/posts/2
     $box = tr_meta_box('Contents');
     $box->addPostType('page');
     $box->setCallback(function() {
         $form = tr_form()->useRest();;
         echo $form->wpEditor('intro')->setLabel('Intro');
+        echo $form->image('intro_img')->setLabel('Image Intro');
+        echo $form->image('intro_img_light')->setLabel('Image Intro (Light)');
         echo $form->text('Titre Abiletés');
         echo $form->repeater('abilities')->setLabel('Abiletés')->setFields(
             $form->row(
