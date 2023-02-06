@@ -73,12 +73,14 @@ add_action('init','add_cors_http_header');
     function searchReplaceArray($array){
         $arrOut = [];
         foreach($array as $k=>$a){
-            $data = @unserialize($a);
+            if(is_string($a)){
+                $data = @unserialize($a);
+            }
             if(is_array($a)){
                 $arrOut[$k] = searchReplaceArray($a);
             }elseif($data !== false){
                 $arrOut[$k] = json_encode(searchReplaceArray($data));
-            }elseif(!is_nan($a)){
+            }elseif(is_numeric($a)){
                 $arrOut[$k] = $a;
                 $img = wp_get_attachment_image_url($a,'large');
                 if($img){
